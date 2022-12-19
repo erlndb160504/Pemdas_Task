@@ -1,0 +1,95 @@
+#include <iostream>
+#include <conio.h>
+using namespace std;
+
+int main ()
+{
+	int barisA, kolomA, barisB, kolomB, sum = 0;
+	
+	cout << "=== OPERASI PERKALIAN MATRIKS ===" << endl;
+	cout << endl;
+	
+	cout << "ORDO MATRIKS A" << endl;
+	cout <<"Input jumlah baris matriks A	: " ;
+	cin >> barisA;
+	cout <<"Input jumlah kolom matriks A	: " ;
+	cin >> kolomA;
+	
+	cout << endl;
+	cout << "ORDO MATRIKS B" << endl;
+	cout <<"Input jumlah baris matriks B	: " ;
+	cin >> barisB;
+	cout <<"Input jumlah kolom matriks B	: " ;
+	cin >> kolomB;
+	
+	int matriksA [barisA][kolomA];
+	int matriksB [barisB][kolomB];
+	int hasil [barisA][kolomB];
+	
+	if (kolomA != barisB)
+	{
+		cout <<"\nTIDAK MEMENUHI SYARAT PERKALIAN MATRIKS" << endl;
+		return 0;
+	}
+	else 
+	{
+		cout << endl;
+		cout <<"----- MATRIKS A -----" << endl;
+		for (int i=1; i <= barisA; i++) {
+			for (int j=1; j <=  kolomA; j++) {
+				cout <<"Elemen baris ke " << i <<" kolom ke " << j <<" : ";
+				cin >> matriksA [i][j];
+			}	
+		} 
+		cout << endl;
+	
+		cout << "Elemen Matriks A" << endl;
+		for (int i=1; i <= barisA; i++){ 
+        	for (int j=1;j <= kolomA; j++){  
+            	cout<< matriksA [i][j] <<"\t";
+        	}
+    	cout << endl;	
+   		}	
+   		
+   		cout << endl;
+   		cout <<"----- MATRIKS B -----" << endl;
+   		for (int i=1; i <= barisA; i++) {
+			for (int j=1; j <=  kolomB; j++) {
+				cout <<"Elemen baris ke " << i <<"  kolom ke" << j <<" : ";
+				cin >> matriksB [i][j];
+			}	
+		}
+		cout << endl;
+		
+		cout << "Elemen Matriks B"<< endl;
+		for (int i=1; i <= barisB; i++){ 
+        	for (int j=1; j <= kolomB; j++){  
+            	cout<< matriksB [i][j] <<"\t";
+        	}
+    			cout << endl;
+    }
+
+	for (int i = 1; i <= barisA; i++ ){
+		for (int j = 1; j <= kolomB; j++ ){
+			for (int k = 1; k <= barisB; k++){
+				sum = sum + matriksA [i][k] * matriksB [k][j] ;
+			}
+			hasil [i][j] = sum;
+			sum = 0;
+			
+		}
+	}
+	cout << endl;
+	cout <<"---- HASIL OPERASI PERKALIAN MATRIKS A DAN B	-----" << endl;
+	for (int i = 1 ; i <= barisA ; i++){
+		for (int j = 1; j <= kolomB ; j++) {
+			cout << hasil [i][j] << "\t";
+		}
+		cout << endl;
+	}
+	
+	
+	}
+	
+getch();
+}
