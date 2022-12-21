@@ -1,0 +1,251 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <stdlib.h>
+#include <ctime>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+int idProduk [100];
+int hargaProduk[100];
+int payNominal, kembalian;
+string namaProduk [100];
+string dataRecord [100];
+char customer[100];
+
+int numberOfChoose()
+{
+	ifstream myfile;
+	myfile.open ("Produk.txt");
+	string baris;
+
+	int i = 0;
+	while (getline (myfile, baris))
+	{
+		i++;
+	}
+	myfile.close();
+	return i;
+}
+
+void openMyfile()
+{
+	ifstream myfile;
+	myfile.open ("Produk.txt");
+	string baris;
+
+	int i = 0;
+	while (getline (myfile, baris))
+	{
+		dataRecord [i] = baris;
+		i++;
+	}
+	myfile.close();
+}
+
+string daftarProduk (int num)
+{
+	return dataRecord [num - 1];
+}
+
+vector <string> split (string option, char separator)
+{
+	vector <string> data;
+	string Tentative = "";
+	for (int i = 0; i <= option.length(); i++)
+	{
+		if (option[i] == separator) {
+			data.push_back (Tentative);
+			Tentative = "";
+		}
+		else {
+			Tentative += option [i];
+		}
+	}
+	data.push_back(Tentative);
+	return data;
+}
+
+void daftarMenu()
+{
+	for (int i = 1; i <= numberOfChoose(); i++)
+	{
+		vector <string> data = split (daftarProduk(i), '/');
+		idProduk[i] = stoi (data[0]);
+		namaProduk [i] = data [1];
+		hargaProduk [i] = stoi (data[2]);
+	};
+}
+
+int buyProduct (int i_d, int amount)
+{
+	int totalBayar = hargaProduk [i_d] * amount;
+	return totalBayar;
+}
+
+void mainMenu ()
+{
+	cout <<"\t -----------------------------"<< endl;
+	cout <<"\t |       PRODUCT LIST        |"<< endl;
+	cout <<"\t -----------------------------"<< endl;
+
+	cout << endl;
+
+	cout <<"\t" << "No. ID" <<"\t" << "Nama Produk" <<"\t" << "Harga Produk" << endl;
+    cout <<"\t" << "------------------------------------" << endl;
+
+	for (int i = 1; i <= numberOfChoose(); i++)
+	{
+		cout <<"\t " << idProduk[i] <<"\t" << namaProduk[i] <<"\t  " << hargaProduk[i] << endl;
+	}
+
+	cout <<"\t___________________________________"<< endl;
+}
+
+void transaksiCust ()
+{
+	cout <<endl;
+	cout <<"Input nama customer	: ";
+	cin.ignore(0);
+	cin.getline(customer,100);
+
+}
+
+map <int, int> shopCart;
+void transaksiPembelian()
+{
+	int i_d, amount;
+	int i_dLast = numberOfChoose();
+	string option;
+
+	do{
+		cout <<"Input ID produk		: ";
+		cin >> i_d;
+		if (i_d > i_dLast)
+		{
+			cout << "COULDN'T FIND PRODUCT ID" << endl;
+			cout << "Ingin melanjutkan transaksi [y/t] : ";
+			cin >> option;
+			if (option == "y" or option =="Y"){
+				continue;
+			}else {
+				break;
+			}
+		}
+		cout <<"Banyak barang		: ";
+		cin >> amount;
+		shopCart[i_d] = amount;
+		cout << endl;
+
+		cout << "lanjutkan input ID? [y/t] ";
+		cin >> option;
+		cout << endl;
+	}while (option == "y" or option == "Y");
+
+}
+
+void eraseCart ()
+{
+	for (int i = 1; i <= numberOfChoose(); i++)
+	{
+		if (shopCart[i] == 0)
+		{
+			shopCart.erase(i);
+		}
+	}
+}
+
+int totalPrice(){
+	int price = 0;
+	for (auto num : shopCart)
+	{
+		price += buyProduct (num.first, num.second);
+	}
+	return price;
+}
+
+void productBuy ()
+{
+	cout << "\t----------------------------"<< endl;
+	cout << "\t*     DETAIL BELANJA	   *"<< endl;
+	cout << "\t----------------------------"<< endl;
+	cout << endl;
+	cout << " Nama Customer		= " << customer << endl;
+	cout << endl;
+	cout << " " << "Nama Produk" <<"\t  "<< "Jumlah" <<"\t" << "Harga" << endl;
+	cout <<" ------------------------------------------" << endl;
+	for (auto num : shopCart){
+		cout <<" ";
+		cout << namaProduk [num.first] <<"\t   "<< num.second << "x" << "\t\t" <<
+		buyProduct (num.first, num.second) << endl;
+	}
+	cout <<" __________________________________________" << endl;
+	cout << endl;
+	cout <<" Total Bayar		= Rp. " << totalPrice() << endl;
+}
+
+void payMent ()
+{
+	cout << " Uang Bayar		= Rp. ";
+	cin >> payNominal;
+
+	if (payNominal < totalPrice())
+	{
+        cout <<"\n Uang yang anda bayarkan kurang, silahkan input kembali" << endl;
+        cout << endl;
+        payMent();
+	}
+	else
+    {
+        kembalian = payNominal - totalPrice ();
+        cout << "Kembalian		= Rp. " << kembalian << endl;
+
+	}
+}
+
+void dateTime ()
+{
+	time_t a =time(0);
+	char* b =ctime(&a);
+
+	cout << " Waktu Transaksi	= " << b << endl;
+}
+
+void strukBelanja()
+{
+	system ("cls");
+	productBuy ();
+	cout <<" Uang Bayar		= Rp. " << payNominal << endl;
+	cout <<" Kembalian		= Rp. " << kembalian << endl;
+	cout << endl;
+	dateTime();
+	cout << endl;
+	cout << " ------------------------------------------" << endl;
+	cout << " Terima Kasih Telah Berbelanja di Toko Kami" << endl;
+	cout << " ------------------------------------------" << endl;
+}
+
+void buyer()
+{
+	dateTime();
+	mainMenu();
+	transaksiCust();
+	cout<< endl;
+	transaksiPembelian();
+	eraseCart();
+	productBuy();
+	payMent();
+}
+
+int main (){
+	openMyfile();
+	daftarMenu();
+	buyer();
+	system("cls");
+	strukBelanja();
+
+	return 0;
+}
+ 
