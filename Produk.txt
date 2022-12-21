@@ -1,0 +1,6 @@
+1/Anggur Merah/45000
+2/Jagung Manis/20000
+3/Jeruk Bali/30000
+4/Kelengkeng/40000
+5/Manggis Raya/35000
+6/Salak Pondo/25000
